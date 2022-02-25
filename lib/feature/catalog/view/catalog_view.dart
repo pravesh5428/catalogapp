@@ -172,45 +172,17 @@ class CatalogView extends GetView<CatalogController> {
                                                   Colors.white, // foreground
                                             ),
                                             onPressed: () {
-                                              RxList cartList = [].obs;
-                                              var message;
-                                              var cart = FlutterCart();
-                                              /// sample function
-                                              addToCart(dynamic _product) => {
-                                                message = cart.addToCart(
-                                                    productId: _product.productId,
-                                                    unitPrice: _product.productPrice,
-                                                    quantity: _product.quantity,
-
-                                                    ///[uniqueCheck] is used to differentiate the type between item
-                                                    ///[e.g] the shirt sizes in (LARGE, MEDIUM, SMALL) the [Product ID] will remain same
-                                                    ///But if UUID is not present so, how we can differentiate between them? So in this case we will
-                                                    ///User the uniqueCheck
-                                                    uniqueCheck: _product.selectedProductType,
-
-                                                    ///[productDetailsObject] is used as a dump variable you can dump your object and any kind of data
-                                                    ///that you wanted use in future.
-                                                    productDetailsObject: _product),
-                                              };
-
-                                              /// This function is used to decrement the item quantity from cart
-                                              removeItemFromCart(int index) => {
-                                                cart.decrementItemFromCart(index),
-                                              };
-
-                                              /// This function is used to increment the item quantity into cart
-                                              addItemToCart(int index) {
-                                                cart.incrementItemToCart(index);
-                                              }
-
-                                              print("cart");
-                                              print(cart);
-
                                               if(controller.filteredProductList[index].selected==false){
                                                 controller.filteredProductList[index].selected=true;
+                                                controller.selectedItemList.add({"id":controller.filteredProductList[index].id,"name":controller.filteredProductList[index].name,"description":controller.filteredProductList[index].description,"price":controller.filteredProductList[index].price});
+                                                controller.totalAmount.add(controller.filteredProductList[index].price);
                                               }else{
                                                 controller.filteredProductList[index].selected=false;
+                                                controller.selectedItemList.removeWhere((element) => element['id'] == int.parse(controller.filteredProductList[index].id.toString()));
+                                                controller.totalAmount.remove(controller.filteredProductList[index].price);
                                               }
+                                              print("selectedItemList");
+                                              print(controller.selectedItemList);
                                               controller.filteredProductList.refresh();
                                             },
                                             child: controller.filteredProductList[index]
@@ -240,20 +212,22 @@ class CatalogView extends GetView<CatalogController> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          controller.getTotalAmount();
           Get.toNamed(RouteConstant.carItemView);
         },
         backgroundColor: Colors.purple,
-        child: Badge(
-            toAnimate: true,
-            position: BadgePosition.topEnd(top: -20, end: -15),
-            shape: BadgeShape.circle,
-            badgeColor: Colors.red,
-            borderRadius: BorderRadius.circular(8),
-            badgeContent: Text('0', style: TextStyle(color: Colors.white)),
-            child: Icon(
-              Icons.shopping_cart_outlined,
+        child: Obx(()=> Badge(
+              toAnimate: true,
+              position: BadgePosition.topEnd(top: -20, end: -15),
+              shape: BadgeShape.circle,
+              badgeColor: Colors.red,
+              borderRadius: BorderRadius.circular(8),
+              badgeContent: Text('${controller.selectedItemList.length}', style: TextStyle(color: Colors.white)),
+              child: Icon(
+                Icons.shopping_cart_outlined,
+             ),
            ),
-         ),
+        ),
       ),
     );
   }

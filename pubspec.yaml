@@ -33,6 +33,7 @@ dependencies:
   dio: ^4.0.4
   flutter_cart: ^0.0.5+1
   badges: ^2.0.2
+  collection: ^1.15.0
 
 dev_dependencies:
   flutter_test:

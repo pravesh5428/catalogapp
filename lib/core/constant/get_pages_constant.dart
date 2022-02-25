@@ -15,7 +15,7 @@ List<GetPage> getPages = [
     name: RouteConstant.splashView,
     page: () =>  SplashScreen(),
     binding: SplashBinding()),
-/*  GetPage(
-      name: RouteConstant.splashView,
-      page: () =>  CartItem()),*/
+  GetPage(
+      name: RouteConstant.carItemView,
+      page: () =>  CartItem())
 ];
